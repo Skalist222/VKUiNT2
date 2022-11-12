@@ -1,4 +1,3 @@
-var pg = require('pg');
 var lang = require('../language/engine.js').lang;// библиотека языковой подстановки
 var format = require('pg-format');
 //var passwordHash = require('password-hash');

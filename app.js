@@ -28,3 +28,4 @@ app.post("/api/news/add",function(req,res){base.addNews(req,res)});
 app.post("/api/news/update",function(req,res){base.updateNews(req,res)});
 
 module.exports = app;
+console.log("Основной пакет App подключен");

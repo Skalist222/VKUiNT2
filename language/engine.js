@@ -5,6 +5,8 @@
 //ru
 var locale = "ru";
 var Rus = {};
+var En ={};
+
 Rus['userNotFound'] = "Пользователь не найден";
 Rus['usersNull'] = "Нет пользователей";
 Rus['userUpdateErr'] ="Ошибка добавления пользователя";
