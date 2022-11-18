@@ -177,11 +177,11 @@ const getAllNews = (req,res) =>
     console.log("!!!Запрос на получение всех новостей!!!");
     pool.query('SELECT * FROM news;', (error, results) => {
         if (error) {
-            res.status(200).json(setMessageError(lang["newsNull"],res));
+            errorM(lang.newsNull,res)
            }
         else
         {
-            res.status(200).json(results.rows);
+          ObjectM(results.rows,res);
         }
       })
 }
@@ -199,18 +199,18 @@ const createNews = (req,res) =>
     pool.query(query,[], (err, result)=>{
       if(err)
       {
-          res.status(200).json(setMessageError(lang["sqlError"]+":"+err.message));
+          errorM(lang["sqlError"]+":"+err.message,res);
       }
       else
       {
         var count = result.rowCount;
         if (count === 0)
         {
-            res.status(200).json(setMessageError(lang["noUpdateRows"]));
+            errorM(lang["noUpdateRows"],res);
         }
         else
         {
-            res.status(200).json(setMessageDone("Обновлено строк:"+count));  
+            doneM("Обновлено строк:"+count,res);  
         }                 
       }
     });
@@ -223,18 +223,18 @@ const deleteNews = (req,res)=>
     pool.query(forma, (err, result)=>{
      if(err)
      {
-        res.status(200).json( setMessageError(lang["sqlError"]+":"+err.message)); 
+        errorM(lang["sqlError"]+":"+err.message,res); 
      }
      else
      {
         var count = result.rowCount;
         if (count === 0)
         {
-            res.status(200).json(setMessageError(lang["noUpdateRows"]));
+            errorM(lang["noUpdateRows"],res);
         }
         else
         {
-            res.status(200).json(setMessageDone(lang["countUpdateRows"]+count));  
+            doneM(lang["countUpdateRows"]+count);  
         }      
      }
    });
@@ -252,10 +252,10 @@ const updateNews = (req,res) =>
   var qStr = "SELECT * FROM news WHERE id ="+id
   pool.query(qStr,(e,result)=>
   {
-    if(e){res.status(200).json(setMessageError(lang["sqlError"]+e.message))}
+    if(e){errorM(lang["sqlError"]+e.message,res)}
     else{
       var news = result.rows[0];
-      if(news===undefined){res.status(200).json(setMessageError(lang["newsNotFound"]))}
+      if(news===undefined){errorM(lang["newsNotFound"],res)}
       else
       {
         if(name === undefined)name = news.namenews;
@@ -270,13 +270,13 @@ const updateNews = (req,res) =>
         console.log(qStr);
         pool.query(qStr,(e,result)=>
         {
-          if(e){res.status(200).json(setMessageError(lang["sqlError"]+":"+e.message))}
+          if(e){errorM(lang["sqlError"]+":"+e.message,res)}
           else
           {
             var count = res.rowCount;
-            if(count===0){res.status(200).json(setMessageError(lang["noUpdateRows"]+":"+e.message))}
+            if(count===0){errorM(lang["noUpdateRows"]+":"+e.message,res)}
             else{
-              res.status(200).json(setMessageDone(lang["done"]));
+             doneM(lang["done"],res);
             }
           }
         })
@@ -327,21 +327,6 @@ function ObjectM(message,res)
   res.status(200).json(message);
 }
 
-
-function setMessageError(message)
-{
-    var mess= {};
-    mess["error"] = message;
-    console.error(mess);
-    return mess;
-}
-function setMessageDone(message)
-{
-    var mess= {};
-    mess["done"] = message;
-    console.error(mess);
-    return mess;
-}
 function validUser(body)
 {
   return body.login !==undefined && body.password !==undefined&& body.firstname !==undefined&& body.lastname!==undefined;
