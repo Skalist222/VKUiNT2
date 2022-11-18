@@ -299,14 +299,6 @@ const query = (req,res) =>
       })
 }
 
-
-
-
-const hash =  (req,res)=>
-{
-  doneM("Хэш",res);
-}
-
 function errorM(message,res)
 {
   mess ={error:message};
@@ -335,7 +327,6 @@ function validUser(body)
 
 
 module.exports.query = query;
-module.exports.hash = hash;
 module.exports.updateNews = updateNews;
 module.exports.updateUser = updateUser;
 module.exports.delNews = deleteNews;

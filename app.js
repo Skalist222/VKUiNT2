@@ -18,7 +18,6 @@ app.get("/api/users/delete/:id",  function(req, res){base.delUser(req,res)});
 app.post("/api/users/login",  function(req, res){base.logIn(req,res)});
 app.post("/api/users/create",function(req,res){base.addUser(req,res)});
 app.post("/api/users/update",function(req,res){base.updateUser(req,res)});
-app.post("/api/hesh",function(req,res){base.hash(req,res)});
 
 
 //get news
