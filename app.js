@@ -27,6 +27,12 @@ app.get("/api/news/delete/:id",function(req,res){base.delNews(req,res)});
 app.post("/api/news/add",function(req,res){base.addNews(req,res)});
 app.post("/api/news/update",function(req,res){base.updateNews(req,res)});
 app.post("/api/news/query",function(req,res){base.query(req,res)});
+app.get("/api/language/setInDb",function(req,res){base.setLanguage(req,res)});
+//app.post("/api/language/");
+
+app.get("/api/test",function(req,res){
+    res.status(200).json({ok:"ok"})
+})
 
 module.exports = app;
 console.log("Основной пакет App подключен");

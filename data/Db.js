@@ -1,9 +1,11 @@
 var lang = require('../language/engine.js').lang;// библиотека языковой подстановки
 var format = require('pg-format');
 const cryptor = require('./criptor.js');
+let language = "";
 //const argon = require('argon2');
 const crypto = require('crypto');// библиотека шифрования ключей
 const { isStringObject } = require('util/types');
+const { json } = require('body-parser');
 const Pool = require('pg').Pool
 const pool = new Pool({
   user: 'postgres',
@@ -15,29 +17,35 @@ const pool = new Pool({
 
 //users
 const getAllUsers = (req, res) => {
+  console.log(req)
+  console.log(language);
   console.log("!!!ЗАпрос на получение всех юзеров!!!");
   pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
-    if (error)  errorM(lang.usersNull,res);
-    else ObjectM(results.rows,res);
+    if (error)  errorM(lang.usersNull[language],res);
+    else
+    {
+      doneM(results.rows,res);
+    }
   })
 }
 const userById = (req, res) => {
+  
   var idstr = req.params.id;
     var id = parseInt(idstr);
     console.log(idstr);
     
-    if (isNaN(id)) errorM(lang.formatEror, res);
+    if (isNaN(id)) errorM(lang.formatEror[language], res);
     else {
       console.log("!!!Запрос на получение пользователя с id=" + id + "!!!");
       var qStr = "Select * from users where id=" + id + "";
       pool.query(qStr, (error, results) => {
-        if (error) { return; }
+        if (error) { errorM(lang.sqlError[language],res); }
         var user = results.rows[0];
         if (user === undefined) {
-          errorM(lang.userNotFound, res);
+          errorM(lang.userNotFound[language], res);
         }
         else {
-          ObjectM(user, res);
+          doneM(user, res);
         }
       })
     }
@@ -47,7 +55,7 @@ const createNewUser =(req,res)=>
 {
   console.log("!!!Запрос на создание нового пользователя!!!");
   var body = req.body;
-  if(!validUser(body)){errorM(lang.notAllUserData,res)}
+  if(!validUser(body)){errorM(lang.notAllUserData[language],res)}
   // Выставляем приоритет(без привилегий) для пользователя
   
   else
@@ -58,7 +66,7 @@ const createNewUser =(req,res)=>
 
     var qStr ="Select * FROM users WHERE login='"+body.login+"'";
     pool.query(qStr,(err,result)=>{//проверка на наличие пользователя в базе
-      if(err) errorM(err.message,res);
+      if(err) errorM(lang.sqlError[language]+":"+err.message,res);
       else
       {
         var password = cryptor.cryptData2(body.password); 
@@ -69,7 +77,7 @@ const createNewUser =(req,res)=>
           if(err)errorM(err.message,res);
           else
           {
-            doneM(lang.countUpdateRows+":"+result.rowCount,res);
+            doneM(lang.countUpdateRows[language]+":"+result.rowCount,res);
           }
         })
       }
@@ -181,7 +189,7 @@ const getAllNews = (req,res) =>
            }
         else
         {
-          ObjectM(results.rows,res);
+          doneM(results.rows,res);
         }
       })
 }
@@ -302,7 +310,9 @@ const query = (req,res) =>
 function errorM(message,res)
 {
   mess ={error:message};
-  console.log("-!!!!!!!! "+message+" !!!!!!!!-");
+  console.log("-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-");
+  console.log(message);
+  console.log("-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-");
   //console.error(mess);
   res.status(200).json(mess);
 }
@@ -312,20 +322,45 @@ function doneM(message,res)
   console.log("__________"+message+"__________");
   res.status(200).json(mess);
 }
-function ObjectM(message,res)
-{
-  mess = {message};
-  console.log(mess);
-  res.status(200).json(message);
-}
 
 function validUser(body)
 {
   return body.login !==undefined && body.password !==undefined&& body.firstname !==undefined&& body.lastname!==undefined;
 }
 
+function getLanguage(req)
+{
+  let rawHeaders =req.rawHeaders;
+  let elementRawHeaders =rawHeaders[29];
+  let lang = elementRawHeaders.split(',')[0];
+}
+const setLanguage = (req,res)=>
+{
+  try { 
+    let positionLangInHeaders =req.rawHeaders.indexOf("Accept-Language")+1;
+    if(positionLangInHeaders===0)
+    {
+      language = "en";
+    doneM(language+"-default", res);
+    }
+    else
+    {
+      language = validLanguage(req.rawHeaders[positionLangInHeaders].split(',')[0]); 
+      doneM(language, res);
+    }
+  }
+  catch (TypeError) {
+    language = "en";
+    doneM(language+"-default", res);
+  }
+}
+function validLanguage(lang)
+{
+  if(lang==="ru"||lang==="ua"||lang==="en")return lang;
+  else return "en";
+}
 
-
+module.exports.setLanguage = setLanguage;
 module.exports.query = query;
 module.exports.updateNews = updateNews;
 module.exports.updateUser = updateUser;

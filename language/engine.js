@@ -3,42 +3,27 @@
 
 /// тут будет интернационализация текстов
 //ru
-var locale = "ru";
-var Rus = {};
-var En ={};
+let languages = {};
+                                /*russian                                       english                                  ukrainian*/
+languages['userNotFound'] =     {ru:"Пользователь не найден",                   en:"User not found"                     ,ua:""};
+languages['usersNull'] =        {ru:"Нет пользователей",                        en:"Empty users"                        ,ua:""};
+languages['userUpdateErr'] =    {ru:"Ошибка добавления пользователя",           en:"Error adding user"                  ,ua:""};
+languages['foundUserError'] =   {ru:"Такой пользователь уже существует",        en:"Such a user already exists"         ,ua:""};
+languages['badLogin'] =         {ru:"Неверный логин",                           en:"Invalid login"                      ,ua:""};
+languages['badPassword'] =      {ru:"Неверный пароль",                          en:"Invalid password"                   ,ua:""};
+languages['notAllUserData'] =   {ru:"Не вся информация о пользователе введена", en:"Not all user information is entered",ua:""};
+languages['formatEror'] =       {ru:"Неверный формат вводимых данных",          en:"Invalid input data format"          ,ua:""};
 
-Rus['userNotFound'] = "Пользователь не найден";
-Rus['usersNull'] = "Нет пользователей";
-Rus['userUpdateErr'] ="Ошибка добавления пользователя";
-Rus['foundUserError'] ="Такой пользователь уже существует";
-Rus['badLogin'] = "Неверный логин";
-Rus['badPassword'] = "Неверный пароль";
-Rus['notAllUserData'] = "Не вся информация о пользователе введена";
-Rus['formatEror'] = "Неверный формат вводимых данных ";
+languages['sqlError'] =         {ru:"Ошибка в SQL запросе",                     en:"Error SQL querty"                   ,ua:""};
+languages['done'] =             {ru:"Выполнено",                                en:"Done"                               ,ua:""};
+languages['noUpdateRows'] =     {ru:"Ни одна строка не была обновлена",         en:"Not a single row has been updated"  ,ua:""};
+languages['countUpdateRows'] =  {ru:"Количество обновленных строк:",            en:"Number of updated rows:"            ,ua:""};
 
-Rus['sqlError'] ="Ошибка в SQL запросе";
-Rus['done'] ="Выполнено";
-Rus['noUpdateRows']= "Ни одна строка не была обновлена";
-Rus['countUpdateRows']= "Количество обновленных строк:";
-
-Rus['newsNull']= "Нет новостей";
-Rus['newsNotFound'] ="Новость не найдена"
-Rus['newsUpdateErr']="Ошибка обновления новости";
-Rus['newsUpdateErr']="Ошибка добавления новости";
-
-Rus['addCookieOk']= "Печенька добавлена";
-Rus['addCookiesErr']= "Ошибка добавления Печеньки";
-Rus['refCookiesOK']= "Печенька обновлена";
+languages['newsNull'] =         {ru:"Нет новостей",                             en:"Empty news"                         ,ua:""};
+languages['newsNotFound'] =     {ru:"Новость не найдена",                       en:"News not found"                     ,ua:""};
+languages['newsUpdateErr'] =    {ru:"Ошибка обновления новости",                en:"Error update news"                  ,ua:""};
+languages['newsUpdateErr'] =    {ru:"Ошибка добавления новости",                en:"Error adding news"                  ,ua:""};
 
 
-var lang;
-switch(locale)
-{
-    case "ru":{lang =Rus}break;
-    default:{lang =Rus}break;
-}
-if (locale === "ru") lang = Rus;
-
-module.exports.lang = lang;
-module.exports.Russian = Rus;
+module.exports.lang = languages;
 console.log("Языковой пакет подключен");
